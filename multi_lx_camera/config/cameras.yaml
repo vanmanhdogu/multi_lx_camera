@@ -1,0 +1,45 @@
+# One entry per camera. Each becomes its own lx_camera_node process, in the
+# namespace `name`, publishing frames <name>_tof / <name>_rgb / <name>_imu.
+#
+#   ip      required unless sn is set. Bare address, no ":3956".
+#   sn      optional. If set the camera is opened by serial number, and the
+#           node refuses to start when the device it gets has another SN.
+#   pose    mount of <name>_tof in base_link: x/y/z in metres,
+#           roll/pitch/yaw in DEGREES. Placeholders below -- measure the rig.
+#   params  per-camera overrides of config/common.yaml.
+#
+# The IPs are placeholders too. Give each camera its address with
+# scripts/set_ip.sh (see README.md) and record the MAC/SN here.
+cameras:
+  - name: camera_s10_front
+    ip: 192.168.100.101
+    sn: "C492A8C03314107"
+    mac: "02:3d:f9:61:85:07"
+    pose: {x: 0.30, y: 0.00, z: 0.50, roll: 0.0, pitch: 0.0, yaw: 0.0}
+    params: {}
+
+  - name: camera_s10_back
+    ip: 192.168.100.102
+    sn: "C492A8C02D00107"
+    mac: "02:80:b3:9a:0c:10"
+    pose: {x: -0.30, y: 0.00, z: 0.50, roll: 0.0, pitch: 0.0, yaw: 180.0}
+    params: {}
+
+  - name: camera_s10_left
+    ip: 192.168.100.103
+    sn: ""
+    mac: ""
+    pose: {x: 0.00, y: 0.25, z: 0.50, roll: 0.0, pitch: 0.0, yaw: 90.0}
+    params: {}
+
+  - name: camera_s10_right
+    ip: 192.168.100.104
+    sn: ""
+    mac: ""
+    pose: {x: 0.00, y: -0.25, z: 0.50, roll: 0.0, pitch: 0.0, yaw: -90.0}
+    params: {}
+
+# Example override -- RGB on one camera only, aligned onto the depth grid:
+#    params:
+#      LX_BOOL_ENABLE_2D_STREAM: 1
+#      LX_INT_RGBD_ALIGN_MODE: 2
