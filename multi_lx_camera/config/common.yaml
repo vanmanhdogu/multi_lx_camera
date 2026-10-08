@@ -1,0 +1,36 @@
+# Defaults shared by every camera node. `/**` matches any node name and
+# namespace. Anything set per camera in cameras.yaml overrides these.
+#
+# SDK parameters (LX_INT_* / LX_BOOL_*) are written to the device only when
+# >= 0; -1 leaves whatever the camera has stored.
+/**:
+  ros__parameters:
+    log_level: 1
+    log_path: "./log/"
+    enable_gpu: 1          # Jetson has no OpenCL ICD; the SDK falls back to CPU
+    jpeg_decode: 0
+    poll_rate: 30          # Hz the driver asks the SDK for a new frame
+
+    is_depth: 1
+    is_xyz: 1              # 0 off, 1 XYZ(RGB) cloud, 2 XYZIRT lidar-style cloud
+    LX_BOOL_ENABLE_3D_AMP_STREAM: 0
+    LX_BOOL_ENABLE_2D_STREAM: 0
+    LX_BOOL_ENABLE_IMU: 0
+    # The cloud must be in metres and in the robot convention (x forward,
+    # y left, z up) for the four clouds to line up in base_link via `pose`.
+    # Only the point clouds are affected; depth images stay in the camera's
+    # optical layout.
+    LX_INT_XYZ_UNIT: 1        # 0 = mm, 1 = m
+    LX_INT_XYZ_COORDINATE: 1  # 0 = camera (right-down-forward), 1 = robot (forward-left-up)
+    LX_INT_RGBD_ALIGN_MODE: 0
+    LX_INT_ALGORITHM_MODE: 0
+    LX_INT_3D_FPS: 15
+    LX_INT_MIN_DEPTH: 0
+    LX_INT_MAX_DEPTH: 3500
+    # iToF cameras whose fields of view overlap interfere with each other;
+    # this makes each camera detect and suppress the others' light. Measured
+    # safe on the S10 (lx_camera_ros/docs/multi_lidar.md §6).
+    LX_BOOL_ENABLE_MULTI_MACHINE: 1
+
+    parent_frame: base_link
+    publish_tf: true       # parent_frame -> <camera_name>_tof from `pose`
